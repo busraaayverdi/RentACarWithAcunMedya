@@ -1,11 +1,12 @@
 package com.acunmedya.jsfs2.RentACar.entitiy;
 
 
+import com.acunmedya.jsfs2.RentACar.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name="cars")
-public class Car {
+public class Car extends BaseEntity {
 
     @Id //primary key alanı
     @GeneratedValue(strategy = GenerationType.IDENTITY) //otomatik artan id

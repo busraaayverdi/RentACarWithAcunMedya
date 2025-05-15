@@ -46,4 +46,13 @@ public class ModelServiceImpl implements ModelService {
                 collect(Collectors.toList());
         return responses;
     }
+
+    @Override
+    public List<GetListModelResponse> getByBrandId(int brandId) {
+        List<Model> models = modelRepository.findByBrandIdNative(brandId);
+        List<GetListModelResponse> responses = models.stream()
+                .map(model -> ModelMapper.INSTANCE.getListModelResponseFromModel(model)).
+                collect(Collectors.toList());
+        return responses;
+    }
 }

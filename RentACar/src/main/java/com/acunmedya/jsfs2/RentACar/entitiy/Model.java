@@ -1,12 +1,13 @@
 package com.acunmedya.jsfs2.RentACar.entitiy;
 
+import com.acunmedya.jsfs2.RentACar.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
 @Table(name = "models")
-public class Model {
+public class Model extends BaseEntity {
 
     @Id //primary key alanı
     @GeneratedValue(strategy = GenerationType.IDENTITY) //otomatik artan id
@@ -22,7 +23,7 @@ public class Model {
     @JoinColumn(name = "brandId")
     private Brand brand; //Many to one
 
-    @OneToMany(mappedBy = "model")
+    @OneToMany(mappedBy = "model",cascade = CascadeType.ALL)
     private List<Car> cars;
 
     public Model() {

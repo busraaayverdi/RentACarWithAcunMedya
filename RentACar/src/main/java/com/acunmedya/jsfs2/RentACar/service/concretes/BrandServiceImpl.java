@@ -5,22 +5,23 @@ import com.acunmedya.jsfs2.RentACar.repository.BrandRepository;
 import com.acunmedya.jsfs2.RentACar.service.abstracts.BrandService;
 import com.acunmedya.jsfs2.RentACar.service.dtos.requests.brand.CreateBrandRequest;
 import com.acunmedya.jsfs2.RentACar.service.dtos.requests.brand.UpdateBrandRequest;
-import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.CreatedBrandResponse;
-import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.GetBrandResponse;
-import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.GetListBrandResponse;
-import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.UpdatedBrandResponse;
+import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.*;
 import com.acunmedya.jsfs2.RentACar.service.mappers.BrandMapper;
+import com.acunmedya.jsfs2.RentACar.service.rules.BrandBusinessRules;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class BrandServiceImpl implements BrandService {
 
+    private final BrandBusinessRules brandBusinessRules;
     private final BrandRepository brandRepository;
 
-    public BrandServiceImpl(BrandRepository brandRepository) {
+    public BrandServiceImpl(BrandBusinessRules brandBusinessRules, BrandRepository brandRepository) {
+        this.brandBusinessRules = brandBusinessRules;
         this.brandRepository = brandRepository;
     }
 
@@ -35,7 +36,7 @@ public class BrandServiceImpl implements BrandService {
 //        response.setId(createdBrand.getId());
 //        response.setName(createdBrand.getName());
 //        return response;
-
+        brandBusinessRules.checkIfBrandNameExists(request.getName());
         Brand brand = BrandMapper.INSTANCE.brandFromCreateBrandRequest(request);
         Brand createdBrand = brandRepository.save(brand);
         CreatedBrandResponse response = BrandMapper.INSTANCE.createdBrandResponseFromBrand(createdBrand);
@@ -72,8 +73,17 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public GetBrandResponse getByName(String name) {
-        Brand brand= brandRepository.getByName(name).orElseThrow(()-> new RuntimeException("Brand not foung"));
+        Brand brand= brandRepository.getByNameIgnoreCase(name).orElseThrow(()-> new RuntimeException("Brand not foung"));
         return mapToBrandResponse(brand);
+    }
+
+    @Override
+    public DeletedBrandResponse softDelete(int id) {
+        Brand brand= brandRepository.findById(id).orElseThrow(() -> new RuntimeException("Brand not found"));
+        brand.setDeleteAt(LocalDateTime.now());
+        Brand deletedBrand = brandRepository.save(brand);
+        DeletedBrandResponse response=BrandMapper.INSTANCE.deletedBrandResponseFromBrand(deletedBrand);
+        return response;
     }
 
 //    private GetListBrandResponse mapToResponse(Brand brand){

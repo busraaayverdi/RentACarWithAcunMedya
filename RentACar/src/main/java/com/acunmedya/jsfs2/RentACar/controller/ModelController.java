@@ -37,4 +37,10 @@ public class ModelController {
     public List<GetListModelResponse> getByBrandName(@PathVariable String brandName){
         return modelService.getByBrandName(brandName);
     }
+    @GetMapping("getbybrandid/{brandId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetListModelResponse> getByBrandId(@PathVariable int brandId){
+        return modelService.getByBrandId(brandId);
+    }
+
 }

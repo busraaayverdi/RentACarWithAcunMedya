@@ -1,12 +1,15 @@
 package com.acunmedya.jsfs2.RentACar.entitiy;
 
+import com.acunmedya.jsfs2.RentACar.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
 @Entity // db tablosu olduğunu temsil eder
 @Table(name = "brands")
-public class Brand {
+@SQLRestriction(value = "deleted_at IS NULL") //silinmiş verileri geri gösterme
+public class Brand extends BaseEntity {
 
     public Brand(int id, String name) {
         this.id = id;
@@ -25,7 +28,7 @@ public class Brand {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "brand")
+    @OneToMany(mappedBy = "brand",cascade = CascadeType.ALL)
     private List<Model> models;
 
     public Brand(int id, String name, List<Model> models) {

@@ -5,10 +5,7 @@ import com.acunmedya.jsfs2.RentACar.repository.BrandRepository;
 import com.acunmedya.jsfs2.RentACar.service.abstracts.BrandService;
 import com.acunmedya.jsfs2.RentACar.service.dtos.requests.brand.CreateBrandRequest;
 import com.acunmedya.jsfs2.RentACar.service.dtos.requests.brand.UpdateBrandRequest;
-import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.CreatedBrandResponse;
-import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.GetBrandResponse;
-import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.GetListBrandResponse;
-import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.UpdatedBrandResponse;
+import com.acunmedya.jsfs2.RentACar.service.dtos.responses.brand.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,7 +48,15 @@ public class BrandsController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable int id){
+    public void delete(@PathVariable int id){
         brandService.delete(id);
     }
+
+    @DeleteMapping("softDelete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public DeletedBrandResponse softDelete(@PathVariable int id){
+         return brandService.softDelete(id);
+    }
+
+
 }
